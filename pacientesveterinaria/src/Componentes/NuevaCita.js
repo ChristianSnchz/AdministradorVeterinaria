@@ -1,7 +1,28 @@
 import React, { Component } from 'react';
 
 class NuevaCita extends Component {
-    state = {  }
+    state = { 
+        cita : {
+            mascota : '',
+            propietario : '',
+            fecha : '',
+            hora : '',
+            sintomas : ''
+        }
+     }
+
+     handleChange = (e) => {
+        console.log(e.target.name + ': ' + e.target.value );
+
+        //colocar lo que el usuario escribe en el state
+
+        this.setState({
+            cita : {
+                ...this.state.cita,
+               [e.target.name] : e.target.value
+            }
+        })
+     }
     render() { 
         return (
             <div className="card mt-5 py-5">
@@ -22,7 +43,8 @@ class NuevaCita extends Component {
                             className="form-control"
                             placeholder="Nombre Mascota"
                             name="mascota"
-                            
+                            onChange={this.handleChange}
+                            value = {this.state.cita.mascota}
                             />
                         </div>
                        </div> 
@@ -38,7 +60,9 @@ class NuevaCita extends Component {
                             type="text"
                             className="form-control"
                             placeholder="Nombre del Dueño"
-                            name="propietario"                        
+                            name="propietario"
+                            onChange={this.handleChange}
+                            value = {this.state.cita.propietario}                        
                             />
                         </div>
                        </div> 
@@ -54,7 +78,9 @@ class NuevaCita extends Component {
                             <input 
                             type="date"
                             className="form-control"
-                            name="fecha"                        
+                            name="fecha"
+                            onChange={this.handleChange}
+                            value = {this.state.cita.fecha}                   
                             />
                         </div>
                         {/* Hora */}
@@ -65,7 +91,9 @@ class NuevaCita extends Component {
                             <input 
                             type="time"
                             className="form-control"
-                            name="hora"                        
+                            name="hora" 
+                            onChange={this.handleChange}
+                            value = {this.state.cita.hora}                       
                             />
                         </div>
                        </div> 
@@ -81,6 +109,8 @@ class NuevaCita extends Component {
                                     className="form-control"
                                     name="sintomas"
                                     placeholder="Describe los sintomas"
+                                    onChange={this.handleChange}
+                                    value = {this.state.cita.sintomas} 
                                 ></textarea>
                             </div>
                         </div> 
