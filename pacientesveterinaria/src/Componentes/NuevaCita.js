@@ -1,16 +1,23 @@
 import React, { Component } from 'react';
+import uuid from 'uuid';
+import PropTypes from 'prop-types';
+
+
+const stateInicial = {
+    cita : {
+        mascota : '',
+        propietario : '',
+        fecha : '',
+        hora : '',
+        sintomas : ''
+    },
+    error : false
+}
 
 class NuevaCita extends Component {
-    state = { 
-        cita : {
-            mascota : '',
-            propietario : '',
-            fecha : '',
-            hora : '',
-            sintomas : ''
-        }
-     }
+    state = { ...stateInicial }
 
+     //cuando el usuario escribe en los inputs
      handleChange = (e) => {
         console.log(e.target.name + ': ' + e.target.value );
 
@@ -23,15 +30,57 @@ class NuevaCita extends Component {
             }
         })
      }
+     handleSubmit = (e) =>{
+         e.preventDefault();
+
+        //extraer los valores del state
+        const {mascota, propietario, fecha, hora, sintomas} = this.state.cita;
+
+    //validar que todos los campos esten llenos 
+        if(mascota === ''|| propietario === '' || fecha === '' || hora === '' || sintomas === '')
+        {
+            this.setState({
+                error: true
+            });
+            // detener la ejecucion
+            return;
+        }
+
+        //generar objeto con los datos
+
+        const nuevaCita = {...this.state.cita};
+        nuevaCita.id = uuid();
+
+        //agregar la cita al state de APP
+        this.props.crearNuevaCita(nuevaCita);
+
+        //Colocar en el state el state Inicial
+        this.setState({
+            ...stateInicial
+        });
+     }
+
     render() { 
+        //extraer valor del state 
+        const {error} = this.state;
         return (
             <div className="card mt-5 py-5">
                 <div className="card-body">
                     <h2 className="card-title text-center mb-5">
                         Llena el formulario para crear una nueva cita
                     </h2>
+    
+                    {/* validacion del formulario vacio presionar submit */}
+
+                    {error ?
+                         <div className="alert alert-danger mt-2 mb-5 text-center"> 
+                         Todos los campos son obligatorios flaco
+                         </div> : null}
+
                     {/* Formulario */}
-                    <form>
+                    <form
+                        onSubmit = {this.handleSubmit}
+                    >
                        {/*  //#region Fila FormGroup Mascota */}
                        <div className="form-group row"> 
                         <label className="col-sm-4 col-lg-2 col-form-label">
@@ -126,5 +175,8 @@ class NuevaCita extends Component {
           );
     }
 }
- 
+NuevaCita.protoType = {
+    crearNuevaCita : PropTypes.func.isRequired
+}
+
 export default NuevaCita;
